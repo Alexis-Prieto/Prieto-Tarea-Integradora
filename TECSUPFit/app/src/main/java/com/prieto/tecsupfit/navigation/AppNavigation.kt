@@ -10,10 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.prieto.tecsupfit.ui.pantallas.PantallaConfirmacion
+import com.prieto.tecsupfit.ui.pantallas.PantallaDetalle
 import com.prieto.tecsupfit.ui.pantallas.PantallaInicio
 import com.prieto.tecsupfit.ui.pantallas.PantallaTemporal
 
@@ -62,6 +66,33 @@ fun AppNavigation() {
                 PantallaInicio(onClaseClick = { classId ->
                     navController.navigate(Screen.Detalle.createRoute(classId))
                 })
+            }
+            composable(
+                route = Screen.Detalle.route,
+                arguments = listOf(navArgument("classId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val classId = backStackEntry.arguments?.getInt("classId") ?: 0
+                PantallaDetalle(
+                    classId = classId,
+                    onVolver = { navController.popBackStack() },
+                    onReservar = { id ->
+                        navController.navigate(Screen.Confirmacion.createRoute(id))
+                    }
+                )
+            }
+            composable(
+                route = Screen.Confirmacion.route,
+                arguments = listOf(navArgument("classId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val classId = backStackEntry.arguments?.getInt("classId") ?: 0
+                PantallaConfirmacion(
+                    classId = classId,
+                    onIrAInicio = {
+                        navController.navigate(Screen.Inicio.route) {
+                            popUpTo(Screen.Inicio.route) { inclusive = true }
+                        }
+                    }
+                )
             }
             composable(Screen.Reservas.route) {
                 PantallaTemporal(title = "Mis Reservas (RF03)")
