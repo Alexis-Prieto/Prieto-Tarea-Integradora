@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.prieto.tecsupfit.ui.pantallas.PantallaInicio
 import com.prieto.tecsupfit.ui.pantallas.PantallaTemporal
 
 @Composable
@@ -58,7 +59,9 @@ fun AppNavigation() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Inicio.route) {
-                PantallaTemporal(title = "Inicio - Lista de Clases (RF01)")
+                PantallaInicio(onClaseClick = { classId ->
+                    navController.navigate(Screen.Detalle.createRoute(classId))
+                })
             }
             composable(Screen.Reservas.route) {
                 PantallaTemporal(title = "Mis Reservas (RF03)")
