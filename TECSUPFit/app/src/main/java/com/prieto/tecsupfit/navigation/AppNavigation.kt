@@ -19,6 +19,7 @@ import androidx.navigation.navArgument
 import com.prieto.tecsupfit.ui.pantallas.PantallaConfirmacion
 import com.prieto.tecsupfit.ui.pantallas.PantallaDetalle
 import com.prieto.tecsupfit.ui.pantallas.PantallaInicio
+import com.prieto.tecsupfit.ui.pantallas.PantallaReservas
 import com.prieto.tecsupfit.ui.pantallas.PantallaTemporal
 
 @Composable
@@ -95,7 +96,7 @@ fun AppNavigation() {
                 )
             }
             composable(Screen.Reservas.route) {
-                PantallaTemporal(title = "Mis Reservas (RF03)")
+                PantallaReservas()
             }
             composable(Screen.Rutinas.route) {
                 PantallaTemporal(title = "Rutinas de Entrenamiento")
