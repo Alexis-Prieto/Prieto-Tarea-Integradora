@@ -9,7 +9,7 @@ Actúa como un **Desarrollador Senior de Android especializado en Jetpack Compos
 
 * **Lenguaje y Framework:** Kotlin + Jetpack Compose con Material 3.
 * **Navegación:** `NavHost` centralizado con `BottomBar` integrada. Deshabilitación explícita de animaciones de transición (`EnterTransition.None` / `ExitTransition.None`).
-* **Manejo de Estado:** Uso de un patrón de repositorio reactivo (`GymRepository`) con colecciones observables (`mutableStateListOf`) para sincronizar reservas y clases en tiempo real entre múltiples pantallas.
+* **Manejo de Estado:** Uso de un patrón de repositorio reactivo (`GymRepository` / `GymData`) con colecciones observables (`mutableStateListOf`) para sincronizar reservas y clases en tiempo real entre múltiples pantallas.
 * **Flujos Clave:**
     * `Inicio` ➔ `Detalle` ➔ `Confirmación` ➔ `Reservas`
     * Navegación fluida por `BottomBar` hacia `Inicio`, `Reservas`, `Rutinas` y `Perfil`.
@@ -31,3 +31,24 @@ Actúa como un **Desarrollador Senior de Android especializado en Jetpack Compos
 
 4. **Lógica de Estado vs. Componentes UI:**
     * Distinguir la representación gráfica (Chips) del modelo de estado subyacente (selección única tipo RadioButton / exclusión mutua) para garantizar actualizaciones reactivas en la interfaz.
+
+---
+
+## Control de Cambios e Iteración Final
+
+### 1. Solicitud de Prompt Ejecutada
+> "Completar la implementación de PantallaRutinas reemplazando el placeholder por un LazyColumn funcional, popular los datos de prueba del filtro 'Esta semana' en GymData para corregir la vista vacía y asegurar la limpieza del BackStack en AppNavigation al confirmar una reserva."
+
+### 2. Cobertura de Requisitos Funcionales (Opción B)
+* **RF-01: Consulta de clases disponibles:** El sistema deberá permitir consultar las clases disponibles, mostrando su nombre, horario y sala, y filtrarlas mediante las opciones “Hoy” y “Esta semana”. 
+* **RF-02: Reserva de clases:** El sistema deberá permitir consultar el detalle de una clase y confirmar su reserva. 
+* **RF-03: Gestión de reservas:** El sistema deberá permitir consultar y cancelar las reservas realizadas por el usuario. 
+* **RF-04: Gestión del perfil:** El sistema deberá permitir consultar y actualizar los datos personales del usuario. 
+
+### 3. Registro de Modificaciones en el Código
+* `PantallaRutinas.kt`: Refactorización desde `PantallaTemporal.kt` hacia la vista definitiva mediante `LazyColumn`.
+* `GymData.kt` / `GymRepository.kt`: Inserción de objetos `GymClass` con la etiqueta `filterTag = "Esta semana"`.
+* `AppNavigation.kt`: Ajuste de rutas y desapilamiento (`popBackStack`) para un flujo de retroceso limpio.
+
+### 4. Mensaje de Commit Oficial
+`feat: implementar pantalla de rutinas con LazyColumn, agregar clases de prueba para la etiqueta "Esta semana" y corregir el BackStack al confirmar una reserva`
