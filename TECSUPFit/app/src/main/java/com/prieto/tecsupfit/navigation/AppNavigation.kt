@@ -2,10 +2,8 @@ package com.prieto.tecsupfit.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -16,12 +14,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -36,6 +32,7 @@ import com.prieto.tecsupfit.ui.pantallas.PantallaDetalle
 import com.prieto.tecsupfit.ui.pantallas.PantallaInicio
 import com.prieto.tecsupfit.ui.pantallas.PantallaPerfil
 import com.prieto.tecsupfit.ui.pantallas.PantallaReservas
+import com.prieto.tecsupfit.ui.pantallas.PantallaRutinas
 
 @Composable
 fun AppNavigation() {
@@ -148,10 +145,8 @@ fun AppNavigation() {
                             }
                         }
 
-                        // Limpia Detalle y Confirmación antes de ir a Reservas
                         navController.popBackStack(Screen.Inicio.route, inclusive = false)
 
-                        // Navega a Reservas conservando el comportamiento del BottomBar
                         navController.navigate(Screen.Reservas.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
@@ -172,21 +167,5 @@ fun AppNavigation() {
                 PantallaPerfil()
             }
         }
-    }
-}
-
-@Composable
-fun PantallaRutinas() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFFAFAFA)),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "Próximamente: Rutinas de entrenamiento",
-            fontSize = 14.sp,
-            color = Color(0xFF757575)
-        )
     }
 }

@@ -25,6 +25,7 @@ object GymRepository {
     val dateFilters = listOf("Hoy", "Esta semana")
 
     val sampleClasses = listOf(
+        // Clases para la pestaña "Hoy"
         GymClass(
             id = 1,
             name = "Yoga funcional",
@@ -54,10 +55,41 @@ object GymRepository {
             availableSpots = 5,
             totalSpots = 10,
             filterTag = "Hoy"
+        ),
+
+        // Clases para la pestaña "Esta semana"
+        GymClass(
+            id = 4,
+            name = "Pilates Mat",
+            time = "8:00 am",
+            room = "Sala 2",
+            description = "Control corporal, postura y fortalecimiento del core.",
+            availableSpots = 6,
+            totalSpots = 12,
+            filterTag = "Esta semana"
+        ),
+        GymClass(
+            id = 5,
+            name = "Body Pump",
+            time = "5:00 pm",
+            room = "Sala 1",
+            description = "Entrenamiento con pesas para tonificación muscular general.",
+            availableSpots = 4,
+            totalSpots = 15,
+            filterTag = "Esta semana"
+        ),
+        GymClass(
+            id = 6,
+            name = "Boxeo Fitness",
+            time = "6:30 pm",
+            room = "Sala 3",
+            description = "Técnicas de boxeo combinadas con trabajo aeróbico de alta quema.",
+            availableSpots = 7,
+            totalSpots = 10,
+            filterTag = "Esta semana"
         )
     )
 
-    // Cambiado de listOf a mutableStateListOf para que la eliminación persista en memoria
     val sampleReservations = mutableStateListOf(
         ReservationItem(
             id = 1,
