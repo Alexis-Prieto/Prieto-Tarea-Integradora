@@ -1,5 +1,7 @@
 package com.prieto.tecsupfit.data
 
+import androidx.compose.runtime.mutableStateListOf
+
 data class GymClass(
     val id: Int,
     val name: String,
@@ -54,7 +56,9 @@ object GymRepository {
             filterTag = "Hoy"
         )
     )
-    val sampleReservations = listOf(
+
+    // Cambiado de listOf a mutableStateListOf para que la eliminación persista en memoria
+    val sampleReservations = mutableStateListOf(
         ReservationItem(
             id = 1,
             className = "Yoga funcional",

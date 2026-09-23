@@ -19,8 +19,8 @@ import com.prieto.tecsupfit.data.ReservationItem
 
 @Composable
 fun PantallaReservas() {
-    // Usamos mutableStateListOf para permitir eliminar la reserva en vivo sin ViewModel
-    val listaReservas = remember { mutableStateListOf(*GymRepository.sampleReservations.toTypedArray()) }
+    // Apuntamos directamente a la lista del repositorio para que la eliminacion sea permanente entre pantallas
+    val listaReservas = GymRepository.sampleReservations
 
     // Estado para controlar el diálogo de confirmación
     var reservaACancelar by remember { mutableStateOf<ReservationItem?>(null) }
