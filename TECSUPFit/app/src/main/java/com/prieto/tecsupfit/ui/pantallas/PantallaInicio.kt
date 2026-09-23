@@ -151,7 +151,7 @@ fun TarjetaClaseOficial(
                     tint = Color(0xFF0F6D58),
                     modifier = Modifier
                         .size(26.dp)
-                        .rotate(-45f) // Rotación para alinearlo horizontalmente
+                        .rotate(-45f)
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))

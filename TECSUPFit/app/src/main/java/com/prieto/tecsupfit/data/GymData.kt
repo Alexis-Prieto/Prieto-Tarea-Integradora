@@ -5,18 +5,20 @@ data class GymClass(
     val name: String,
     val time: String,
     val room: String,
-    val duration: String,
+    val duration: String = "45 min",
     val description: String,
-    val availableSlots: Int,
-    val totalSlots: Int,
-    val filterTag: String
+    val availableSpots: Int,
+    val totalSpots: Int,
+    val filterTag: String = "Hoy"
 )
+
 data class ReservationItem(
     val id: Int,
     val className: String,
     val schedule: String,
     val status: String
 )
+
 object GymRepository {
     val dateFilters = listOf("Hoy", "Esta semana")
 
@@ -26,10 +28,9 @@ object GymRepository {
             name = "Yoga funcional",
             time = "7:00 am",
             room = "Sala 2",
-            duration = "45 min",
-            description = "Mejora tu flexibilidad, postura y movilidad articular con ejercicios guiados.",
-            availableSlots = 5,
-            totalSlots = 10,
+            description = "Entrenamiento de movilidad y flexibilidad corporal.",
+            availableSpots = 10,
+            totalSpots = 12,
             filterTag = "Hoy"
         ),
         GymClass(
@@ -37,10 +38,9 @@ object GymRepository {
             name = "Cross Training",
             time = "6:00 pm",
             room = "Sala 1",
-            duration = "45 min",
             description = "Entrenamiento funcional de alta intensidad. Cupos limitados.",
-            availableSlots = 8,
-            totalSlots = 12,
+            availableSpots = 8,
+            totalSpots = 12,
             filterTag = "Hoy"
         ),
         GymClass(
@@ -48,26 +48,24 @@ object GymRepository {
             name = "Spinning",
             time = "7:30 pm",
             room = "Sala 3",
-            duration = "50 min",
-            description = "Cardio de alta quema calórica sobre bicicleta estática.",
-            availableSlots = 3,
-            totalSlots = 15,
+            description = "Ejercicio cardiovascular de alta intensidad sobre bicicleta estática.",
+            availableSpots = 5,
+            totalSpots = 10,
             filterTag = "Hoy"
-        ),
-        GymClass(
-            id = 4,
-            name = "Power Pilates",
-            time = "8:00 am",
-            room = "Sala 2",
-            duration = "60 min",
-            description = "Fortalecimiento de core y corrección postural mediante ejercicios controlados.",
-            availableSlots = 6,
-            totalSlots = 10,
-            filterTag = "Esta semana"
         )
     )
     val sampleReservations = listOf(
-        ReservationItem(1, "Cross Training", "Hoy, 6:00 pm", "Confirmada"),
-        ReservationItem(2, "Yoga funcional", "Ayer, 7:00 am", "Completada")
+        ReservationItem(
+            id = 1,
+            className = "Yoga funcional",
+            schedule = "Hoy, 7:00 am",
+            status = "Confirmada"
+        ),
+        ReservationItem(
+            id = 2,
+            className = "Spinning",
+            schedule = "Ayer, 7:30 pm",
+            status = "Completada"
+        )
     )
 }

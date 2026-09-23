@@ -19,43 +19,22 @@ import com.prieto.tecsupfit.data.ReservationItem
 
 @Composable
 fun PantallaReservas() {
-    var listaReservas by remember { mutableStateOf(GymRepository.sampleReservations) }
-    var reservaACancelar by remember { mutableStateOf<ReservationItem?>(null) }
+    val listaReservas by remember { mutableStateOf(GymRepository.sampleReservations) }
 
-    if (reservaACancelar != null) {
-        AlertDialog(
-            onDismissRequest = { reservaACancelar = null },
-            title = { Text("Cancelar Reserva") },
-            text = { Text("¿Estás seguro de que deseas cancelar tu reserva para ${reservaACancelar?.className}?") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        listaReservas = listaReservas.filter { it.id != reservaACancelar?.id }
-                        reservaACancelar = null
-                    }
-                ) {
-                    Text("Sí, cancelar", color = Color.Red)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { reservaACancelar = null }) {
-                    Text("Volver")
-                }
-            }
-        )
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(Color.White)
+            .padding(horizontal = 20.dp, vertical = 24.dp)
     ) {
         Text(
-            text = "Mis Reservas",
-            fontSize = 28.sp,
+            text = "Mis reservas",
+            fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(bottom = 16.dp)
+            color = Color(0xFF1E1E1E),
+            modifier = Modifier.padding(bottom = 20.dp)
         )
+
         if (listaReservas.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -65,70 +44,74 @@ fun PantallaReservas() {
             }
         } else {
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(listaReservas) { reserva ->
-                    TarjetaReserva(
-                        reserva = reserva,
-                        onCancelar = { reservaACancelar = reserva }
-                    )
+                    TarjetaReserva(reserva = reserva)
                 }
             }
         }
     }
 }
+
 @Composable
-fun TarjetaReserva(
-    reserva: ReservationItem,
-    onCancelar: () -> Unit
-) {
+fun TarjetaReserva(reserva: ReservationItem) {
     val esConfirmada = reserva.status == "Confirmada"
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color(0xFFF2F2F2))
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            if (esConfirmada) {
+                Box(
+                    modifier = Modifier
+                        .width(6.dp)
+                        .fillMaxHeight()
+                        .background(Color(0xFF0F6D58))
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 16.dp)
             ) {
                 Text(
                     text = reserva.className,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1E1E1E)
                 )
-                Text(
-                    text = reserva.status,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = if (esConfirmada) Color(0xFF2E7D32) else Color.Gray,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(if (esConfirmada) Color(0xFFE8F5E9) else Color(0xFFEEEEEE))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = reserva.schedule,
-                fontSize = 14.sp,
-                color = Color.DarkGray
-            )
-            if (esConfirmada) {
-                Spacer(modifier = Modifier.height(12.dp))
-                OutlinedButton(
-                    onClick = onCancelar,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red)
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = reserva.schedule,
+                    fontSize = 13.sp,
+                    color = Color(0xFF757575)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(if (esConfirmada) Color(0xFFE0F2EE) else Color(0xFFE5E5E5))
+                        .padding(horizontal = 12.dp, vertical = 4.dp)
                 ) {
-                    Text("Cancelar Reserva")
+                    Text(
+                        text = reserva.status,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = if (esConfirmada) Color(0xFF0F6D58) else Color(0xFF757575)
+                    )
                 }
             }
         }

@@ -100,7 +100,7 @@ fun PantallaDetalle(
 
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "${clase.availableSlots} de ${clase.totalSlots} cupos disponibles",
+            text = "${clase.availableSpots} de ${clase.totalSpots} cupos disponibles",
             fontSize = 14.sp,
             color = Color(0xFF555555)
         )
