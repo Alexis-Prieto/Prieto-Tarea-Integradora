@@ -19,16 +19,13 @@ import com.prieto.tecsupfit.data.ReservationItem
 
 @Composable
 fun PantallaReservas() {
-    // Apuntamos directamente a la lista del repositorio para que la eliminacion sea permanente entre pantallas
     val listaReservas = GymRepository.sampleReservations
-
-    // Estado para controlar el diálogo de confirmación
     var reservaACancelar by remember { mutableStateOf<ReservationItem?>(null) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color(0xFFFAFAFA))
             .padding(horizontal = 20.dp, vertical = 24.dp)
     ) {
         Text(
@@ -44,11 +41,15 @@ fun PantallaReservas() {
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "No tienes reservas activas", color = Color.Gray)
+                Text(
+                    text = "No tienes reservas activas",
+                    color = Color(0xFF757575),
+                    fontSize = 14.sp
+                )
             }
         } else {
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 items(listaReservas) { reserva ->
                     TarjetaReserva(
@@ -92,11 +93,11 @@ fun TarjetaReserva(
 ) {
     val esConfirmada = reserva.status == "Confirmada"
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xFFF2F2F2))
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier
@@ -106,7 +107,7 @@ fun TarjetaReserva(
             if (esConfirmada) {
                 Box(
                     modifier = Modifier
-                        .width(6.dp)
+                        .width(5.dp)
                         .fillMaxHeight()
                         .background(Color(0xFF0F6D58))
                 )
@@ -115,7 +116,7 @@ fun TarjetaReserva(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 16.dp)
+                    .padding(horizontal = 18.dp, vertical = 16.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -124,14 +125,16 @@ fun TarjetaReserva(
                 ) {
                     Text(
                         text = reserva.className,
-                        fontSize = 16.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF1E1E1E)
                     )
 
-                    // Solo permite cancelar reservas que están "Confirmadas"
                     if (esConfirmada) {
-                        TextButton(onClick = onCancelarClick) {
+                        TextButton(
+                            onClick = onCancelarClick,
+                            contentPadding = PaddingValues(0.dp)
+                        ) {
                             Text(
                                 text = "Cancelar",
                                 color = Color(0xFFD32F2F),
@@ -142,7 +145,7 @@ fun TarjetaReserva(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
                     text = reserva.schedule,
@@ -150,18 +153,18 @@ fun TarjetaReserva(
                     color = Color(0xFF757575)
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(50))
                         .background(if (esConfirmada) Color(0xFFE0F2EE) else Color(0xFFE5E5E5))
-                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                        .padding(horizontal = 10.dp, vertical = 4.dp)
                 ) {
                     Text(
                         text = reserva.status,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
                         color = if (esConfirmada) Color(0xFF0F6D58) else Color(0xFF757575)
                     )
                 }

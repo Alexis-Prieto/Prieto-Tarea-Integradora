@@ -2,8 +2,10 @@ package com.prieto.tecsupfit.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -14,10 +16,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -25,12 +29,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.prieto.tecsupfit.data.GymRepository
+import com.prieto.tecsupfit.data.ReservationItem
 import com.prieto.tecsupfit.ui.pantallas.PantallaConfirmacion
 import com.prieto.tecsupfit.ui.pantallas.PantallaDetalle
 import com.prieto.tecsupfit.ui.pantallas.PantallaInicio
 import com.prieto.tecsupfit.ui.pantallas.PantallaPerfil
 import com.prieto.tecsupfit.ui.pantallas.PantallaReservas
-import com.prieto.tecsupfit.ui.pantallas.PantallaRutinas
 
 @Composable
 fun AppNavigation() {
@@ -95,7 +100,6 @@ fun AppNavigation() {
             navController = navController,
             startDestination = Screen.Inicio.route,
             modifier = Modifier.padding(innerPadding),
-            // Se desactivan las animaciones de cambio de pantalla únicamente:
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
             popEnterTransition = { EnterTransition.None },
@@ -127,8 +131,33 @@ fun AppNavigation() {
                 PantallaConfirmacion(
                     classId = classId,
                     onIrAInicio = {
+                        val claseEncontrada = GymRepository.sampleClasses.find { it.id == classId }
+
+                        if (claseEncontrada != null) {
+                            val yaExiste = GymRepository.sampleReservations.any { it.className == claseEncontrada.name }
+                            if (!yaExiste) {
+                                val nuevoId = (GymRepository.sampleReservations.maxOfOrNull { it.id } ?: 0) + 1
+                                GymRepository.sampleReservations.add(
+                                    ReservationItem(
+                                        id = nuevoId,
+                                        className = claseEncontrada.name,
+                                        schedule = "Hoy, ${claseEncontrada.time}",
+                                        status = "Confirmada"
+                                    )
+                                )
+                            }
+                        }
+
+                        // Limpia Detalle y Confirmación antes de ir a Reservas
+                        navController.popBackStack(Screen.Inicio.route, inclusive = false)
+
+                        // Navega a Reservas conservando el comportamiento del BottomBar
                         navController.navigate(Screen.Reservas.route) {
-                            popUpTo(Screen.Inicio.route) { inclusive = true }
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 )
@@ -143,5 +172,21 @@ fun AppNavigation() {
                 PantallaPerfil()
             }
         }
+    }
+}
+
+@Composable
+fun PantallaRutinas() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFFAFAFA)),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Próximamente: Rutinas de entrenamiento",
+            fontSize = 14.sp,
+            color = Color(0xFF757575)
+        )
     }
 }
