@@ -77,12 +77,14 @@ fun AppNavigation() {
                                     indicatorColor = Color.Transparent
                                 ),
                                 onClick = {
-                                    navController.navigate(screen.route) {
-                                        popUpTo(navController.graph.findStartDestination().id) {
-                                            saveState = true
+                                    if (currentRoute != screen.route) {
+                                        navController.navigate(screen.route) {
+                                            popUpTo(navController.graph.findStartDestination().id) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
                                         }
-                                        launchSingleTop = true
-                                        restoreState = true
                                     }
                                 }
                             )
@@ -123,8 +125,13 @@ fun AppNavigation() {
                 PantallaConfirmacion(
                     classId = classId,
                     onIrAInicio = {
-                        navController.navigate(Screen.Inicio.route) {
-                            popUpTo(Screen.Inicio.route) { inclusive = true }
+                        navController.popBackStack(Screen.Inicio.route, inclusive = false)
+                        navController.navigate(Screen.Reservas.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 )
