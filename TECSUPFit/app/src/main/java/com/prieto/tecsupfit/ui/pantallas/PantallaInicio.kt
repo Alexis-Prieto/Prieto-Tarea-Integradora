@@ -6,16 +6,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,80 +23,95 @@ import androidx.compose.ui.unit.sp
 import com.prieto.tecsupfit.data.GymClass
 import com.prieto.tecsupfit.data.GymRepository
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaInicio(
     onClaseClick: (Int) -> Unit = {}
 ) {
-    var textoBusqueda by remember { mutableStateOf("") }
     var filtroSeleccionado by remember { mutableStateOf("Hoy") }
 
     val clasesFiltradas = GymRepository.sampleClasses.filter { clase ->
-        val coincideFiltro = clase.filterTag == filtroSeleccionado
-        val coincideBusqueda = clase.name.contains(textoBusqueda, ignoreCase = true) ||
-                clase.room.contains(textoBusqueda, ignoreCase = true)
-        coincideFiltro && coincideBusqueda
+        clase.filterTag == filtroSeleccionado
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(Color.White)
     ) {
-        Text(
-            text = "TECSUP Fit",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            text = "Reserva tu clase de hoy",
-            fontSize = 14.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        OutlinedTextField(
-            value = textoBusqueda,
-            onValueChange = { textoBusqueda = it },
-            placeholder = { Text("Buscar clase o sala...") },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true
-        )
-
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(bottom = 16.dp)
+                .background(Color(0xFF0F6D58))
+                .padding(horizontal = 20.dp, vertical = 20.dp)
         ) {
-            items(GymRepository.dateFilters) { filtro ->
-                FilterChip(
-                    selected = filtroSeleccionado == filtro,
-                    onClick = { filtroSeleccionado = filtro },
-                    label = { Text(filtro) }
+            Column {
+                Text(
+                    text = "TECSUP Fit",
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = "Hola, Alexis",
+                    fontSize = 13.sp,
+                    color = Color.White.copy(alpha = 0.9f)
                 )
             }
         }
 
-        if (clasesFiltradas.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentAlignment = Alignment.Center
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp)
+        ) {
+            Spacer(modifier = Modifier.height(18.dp))
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "No hay clases disponibles", color = Color.Gray)
+                items(GymRepository.dateFilters) { filtro ->
+                    val esSeleccionado = filtroSeleccionado == filtro
+                    Box(
+                        modifier = Modifier
+                            .clip(if (esSeleccionado) CircleShape else RoundedCornerShape(16.dp))
+                            .background(
+                                if (esSeleccionado) Color(0xFF0F6D58) else Color(0xFFF0F0F0)
+                            )
+                            .clickable { filtroSeleccionado = filtro }
+                            .padding(
+                                horizontal = if (esSeleccionado) 20.dp else 16.dp,
+                                vertical = 10.dp
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = filtro,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = if (esSeleccionado) Color.White else Color(0xFF444444)
+                        )
+                    }
+                }
             }
-        } else {
+
+            Spacer(modifier = Modifier.height(22.dp))
+
+            Text(
+                text = "Clases disponibles",
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF1E1E1E)
+            )
+
+            Spacer(modifier = Modifier.height(14.dp))
+
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.weight(1f)
+                contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 items(clasesFiltradas) { clase ->
-                    TarjetaClase(
+                    TarjetaClaseOficial(
                         clase = clase,
                         onClick = { onClaseClick(clase.id) }
                     )
@@ -107,7 +122,7 @@ fun PantallaInicio(
 }
 
 @Composable
-fun TarjetaClase(
+fun TarjetaClaseOficial(
     clase: GymClass,
     onClick: () -> Unit
 ) {
@@ -115,65 +130,44 @@ fun TarjetaClase(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF2F2F2)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier
+                    .size(52.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(Color(0xFFE0F2EE)),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = clase.name,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "${clase.availableSlots}/${clase.totalSlots} cupos",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = if (clase.availableSlots > 0) Color(0xFF2E7D32) else Color.Red,
+                Icon(
+                    imageVector = Icons.Default.FitnessCenter,
+                    contentDescription = null,
+                    tint = Color(0xFF0F6D58),
                     modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(
-                            if (clase.availableSlots > 0) Color(0xFFE8F5E9) else Color(0xFFFFEBEE)
-                        )
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .size(26.dp)
+                        .rotate(-45f) // Rotación para alinearlo horizontalmente
                 )
             }
+            Spacer(modifier = Modifier.width(16.dp))
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Default.AccessTime,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp),
-                    tint = Color.Gray
-                )
-                Spacer(modifier = Modifier.width(4.dp))
+            Column {
                 Text(
-                    text = "${clase.time} (${clase.duration})",
-                    fontSize = 14.sp,
-                    color = Color.DarkGray
+                    text = clase.name,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1E1E1E)
                 )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Icon(
-                    imageVector = Icons.Default.LocationOn,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp),
-                    tint = Color.Gray
-                )
-                Spacer(modifier = Modifier.width(4.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = clase.room,
-                    fontSize = 14.sp,
-                    color = Color.DarkGray
+                    text = "${clase.time} · ${clase.room}",
+                    fontSize = 13.sp,
+                    color = Color(0xFF757575)
                 )
             }
         }
