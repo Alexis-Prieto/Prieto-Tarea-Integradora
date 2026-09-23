@@ -19,7 +19,11 @@ import com.prieto.tecsupfit.data.ReservationItem
 
 @Composable
 fun PantallaReservas() {
-    val listaReservas by remember { mutableStateOf(GymRepository.sampleReservations) }
+    // Usamos mutableStateListOf para permitir eliminar la reserva en vivo sin ViewModel
+    val listaReservas = remember { mutableStateListOf(*GymRepository.sampleReservations.toTypedArray()) }
+
+    // Estado para controlar el diálogo de confirmación
+    var reservaACancelar by remember { mutableStateOf<ReservationItem?>(null) }
 
     Column(
         modifier = Modifier
@@ -47,15 +51,45 @@ fun PantallaReservas() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(listaReservas) { reserva ->
-                    TarjetaReserva(reserva = reserva)
+                    TarjetaReserva(
+                        reserva = reserva,
+                        onCancelarClick = { reservaACancelar = reserva }
+                    )
                 }
             }
         }
     }
+
+    // Modal AlertDialog de Confirmación
+    reservaACancelar?.let { reserva ->
+        AlertDialog(
+            onDismissRequest = { reservaACancelar = null },
+            title = { Text(text = "Cancelar reserva", fontWeight = FontWeight.Bold) },
+            text = { Text(text = "¿Estás seguro de que deseas cancelar tu reserva de ${reserva.className}?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        listaReservas.remove(reserva)
+                        reservaACancelar = null
+                    }
+                ) {
+                    Text("Sí, cancelar", color = Color(0xFFD32F2F), fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { reservaACancelar = null }) {
+                    Text("No", color = Color.Gray)
+                }
+            }
+        )
+    }
 }
 
 @Composable
-fun TarjetaReserva(reserva: ReservationItem) {
+fun TarjetaReserva(
+    reserva: ReservationItem,
+    onCancelarClick: () -> Unit
+) {
     val esConfirmada = reserva.status == "Confirmada"
 
     Box(
@@ -83,12 +117,30 @@ fun TarjetaReserva(reserva: ReservationItem) {
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp, vertical = 16.dp)
             ) {
-                Text(
-                    text = reserva.className,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1E1E1E)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = reserva.className,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1E1E1E)
+                    )
+
+                    // Solo permite cancelar reservas que están "Confirmadas"
+                    if (esConfirmada) {
+                        TextButton(onClick = onCancelarClick) {
+                            Text(
+                                text = "Cancelar",
+                                color = Color(0xFFD32F2F),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(4.dp))
 
