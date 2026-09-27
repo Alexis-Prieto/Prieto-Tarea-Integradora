@@ -2,22 +2,15 @@
 
 ---
 
-## 🔸 OPCIÓN B
-
-### Capturas de Pantalla de la aplicacion en ejecución (FASE 1 - SIN IA)
-
-<img width="965" height="612" alt="image" src="https://github.com/user-attachments/assets/4b2f736e-bbd5-4a89-a3ee-5bba2d46496a" />
-
-<img width="852" height="537" alt="image" src="https://github.com/user-attachments/assets/b0f41f4b-f18a-44d9-bd0e-737d445e2fe0" />
-
-
-### Capturas de Pantalla de la aplicacion en ejecución (FASE 2 - CON IA)
+## 🔸 OPCIÓN B (FASE 2 - CON IA)
 
 ### Requerimientos Funcionales
-1. **RF-01: Consulta de clases disponibles** - Buscar y visualizar el catálogo de clases con sus horarios y cupos.
+1. **RF-01: Consulta de clases disponibles** - Filtrar por período ("Hoy" y "Esta semana") y visualizar el catálogo de clases con sus horarios y cupos.
 2. **RF-02: Reserva de clases** - Seleccionar una clase específica y registrar la reserva del cupo.
 3. **RF-03: Gestión de reservas** - Consultar el historial de clases reservadas y cancelar o eliminar inscripciones activas.
-4. **RF-04: Gestión del perfil** - Visualizar la información personal del usuario.
+4. **RF-04: Consulta de perfil y rutinas** - Visualizar la información personal del usuario y el catálogo funcional de rutinas de entrenamiento.
+
+### Capturas de Pantalla de la aplicacion en ejecución 
 
 <img width="997" height="657" alt="image" src="https://github.com/user-attachments/assets/8323b33a-bd82-4084-9f44-3459657c02f3" />
 
